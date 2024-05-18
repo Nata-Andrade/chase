@@ -14,6 +14,7 @@ int main(int argc, char** argv)
 	{
 		fputs("Invalid number of arguments\n", stdout);
 		fputs("Try \'chase -h\' for help\n", stdout);
+		return 1;
 	}
 	FILE* file;
 	char c=getopt(argc, argv, "hu:l:i:");
@@ -27,30 +28,36 @@ int main(int argc, char** argv)
 			file=fopen(optarg,"r");
 			if(file==NULL)
 			{
+				fclose(file);
 				printf("Coudn\'t open %s\n", optarg);
 				return 1;
 			}
 			upcase(file);
+			fclose(file);
 			break;
 			
 		case 'l':
 			file=fopen(optarg,"r");
 			if(file==NULL)
 			{
+				fclose(file);
 				printf("Coudn\'t open %s\n", optarg);
 				return 1;
 			}
 			locase(file);
+			fclose(file);
 			break;
 			
 		case 'i':
 			file=fopen(optarg,"r");
 			if(file==NULL)
 			{
+				fclose(file);
 				printf("Coudn\'t open %s\n", optarg);
 				return 1;
 			}
 			icase(file);
+			fclose(file);
 			break;
 			
 		case '?':
@@ -58,7 +65,6 @@ int main(int argc, char** argv)
 			return 1;
 			
 	}
-	fclose(file);
 	return 0;
 }
 
@@ -110,4 +116,3 @@ void printtryh(void)
 	fputs("Try \'chase -h\' for help\n", stdout);
 	return;
 }
-
