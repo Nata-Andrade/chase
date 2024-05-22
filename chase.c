@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 void upcase(FILE* stream);
 void locase(FILE* stream);
@@ -18,6 +19,7 @@ int main(int argc, char** argv)
 	}
 	FILE* file;
 	char c=getopt(argc, argv, "hu:l:i:");
+	char* filename=optarg;
 	switch(c)
 	{
 		case 'h':
@@ -25,39 +27,60 @@ int main(int argc, char** argv)
 			break;
 			
 		case 'u':
-			file=fopen(optarg,"r");
-			if(file==NULL)
+			if(!(strcmp(filename, "-")))
 			{
-				fclose(file);
-				printf("Coudn\'t open %s\n", optarg);
-				return 1;
+				upcase(stdin);
 			}
-			upcase(file);
-			fclose(file);
+			else
+			{
+				file=fopen(filename,"r");
+				if(file==NULL)
+				{
+					fclose(file);
+					printf("Coudn\'t open %s\n", filename);
+					return 1;
+				}
+				upcase(file);
+				fclose(file);
+			}
 			break;
 			
 		case 'l':
-			file=fopen(optarg,"r");
-			if(file==NULL)
+			if(!(strcmp(filename, "-")))
 			{
-				fclose(file);
-				printf("Coudn\'t open %s\n", optarg);
-				return 1;
+				locase(stdin);
 			}
-			locase(file);
-			fclose(file);
+			else
+			{
+				file=fopen(filename,"r");
+				if(file==NULL)
+				{
+					fclose(file);
+					printf("Coudn\'t open %s\n", filename);
+					return 1;
+				}
+				locase(file);
+				fclose(file);
+			}
 			break;
 			
 		case 'i':
-			file=fopen(optarg,"r");
-			if(file==NULL)
+			if(!(strcmp(filename, "-")))
 			{
-				fclose(file);
-				printf("Coudn\'t open %s\n", optarg);
-				return 1;
+				icase(stdin);
 			}
-			icase(file);
-			fclose(file);
+			else
+			{
+				file=fopen(filename,"r");
+				if(file==NULL)
+				{
+					fclose(file);
+					printf("Coudn\'t open %s\n", filename);
+					return 1;
+				}
+				icase(file);
+				fclose(file);
+			}
 			break;
 			
 		case '?':
@@ -102,6 +125,7 @@ void printh(void)
 {
 	fputs("Usage: chase OPTION FILE\n", stdout);
 	fputs("CHange cASE of the ASCII text file FILE and write it to stdout.\n", stdout);
+	fputs("If FILE is literal -, reads from STDIN.\n", stdout);
 	fputs("\n", stdout);
 	fputs("Options:\n", stdout);
 	fputs("\t-h\tdisplays this help and exits\n", stdout);
@@ -116,3 +140,4 @@ void printtryh(void)
 	fputs("Try \'chase -h\' for help\n", stdout);
 	return;
 }
+
